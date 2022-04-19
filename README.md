@@ -4,7 +4,7 @@ This repository is developed by Tae Ha "Jeff" Park at [Space Rendezvous Laborato
 
 ## Introduction
 
-This is the official PyTorch implementation of [SPNv2](link).
+This is the official PyTorch implementation of [SPNv2](https://arxiv.org/abs/2203.04275).
 
 ### Abstract
 
