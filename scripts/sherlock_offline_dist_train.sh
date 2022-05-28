@@ -35,7 +35,8 @@ LOG=$SCRATCH/spnv2/logs
 OUTPUT=$SCRATCH/spnv2/outputs
 
 # Experiment config file
-CFG=$ROOT/experiments/offline_train_full_config.yaml
+CFG=$ROOT/experiments/offline_train_full_config_phi3_BN.yaml
+# CFG=$ROOT/experiments/offline_train_full_config_phi6_GN.yaml
 
 python3 tools/train.py --cfg $CFG \
     DIST.MULTIPROCESSING_DISTRIBUTED True \

@@ -1,12 +1,12 @@
 ROOT: '/media/shared/Jeff/SLAB/spnv2'
 OUTPUT_DIR: 'outputs'
 LOG_DIR:    'logs'
-SEED: 2021 # Random seed
+# SEED: 2021 # Random seed
 AUTO_RESUME: True
 CUDA: True
 FP16: False # No AMP during TTT
 VERBOSE: True
-EXP_NAME: 'odr/B4_N1024'
+EXP_NAME: 'odr/GN8_N1024'
 CUDNN:
   BENCHMARK: True
   DETERMINISTIC: False
@@ -38,7 +38,7 @@ AUGMENT:
 ODR:
   MIN_ENTROPY: True
   NUM_TRAIN_SAMPLES: 1024
-  IMAGES_PER_BATCH: 4
+  IMAGES_PER_BATCH: 1
 TRAIN:
   TRAIN_CSV: 'lightbox/labels/lightbox.csv'
   VAL_CSV  : 'lightbox/labels/lightbox.csv'
@@ -66,7 +66,7 @@ TEST:
   SPEED_THRESHOLD_T: 2.173e-3 # [m/m]
 MODEL:
   BACKBONE:
-    NAME: 'efficientdet_d3'
+    NAME: 'efficientdet_d6'
   HEAD:
     NAMES: ['heatmap', 'efficientpose', 'segmentation']
     LOSS_HEADS: []
@@ -76,8 +76,8 @@ MODEL:
     POSE_REGRESSION_LOSS: 'speed' # SPEED or transformation loss
     ANCHOR_SCALE: '[2 ** 0, 2 ** (1.0 / 3.0), 2 ** (2.0 / 3.0)]'
     ANCHOR_RATIO: [[1.0, 1.0], [1.4, 0.7], [0.7, 1.4]]
-  EFFICIENTDET_PHI: 3
-  USE_GROUPNORM_BACKBONE: False
+  EFFICIENTDET_PHI: 6
+  USE_GROUPNORM_BACKBONE: True
   USE_GROUPNORM_HEADS: True
   GROUPNORM_SIZE: 16
   FIND_UNUSED_PARAM: False

@@ -78,12 +78,14 @@ def do_adapt(epoch, cfg, model, bn_features, data_loader, optimizer, log_dir=Non
         entropy_meter.update(float(loss_items['ent']), cfg.TRAIN.IMAGES_PER_GPU)
 
         if cfg.MODEL.USE_GROUPNORM_BACKBONE:
-            # GroupNorm used -- simply update affine parameters
-            clip_grad_norm_(model.parameters(), 1.0)
-            optimizer.step()
+            # Accumulate gradients just like in BN
+            if (batch_idx + 1) % cfg.ODR.IMAGES_PER_BATCH == 0:
+                # GroupNorm used -- simply update affine parameters
+                # clip_grad_norm_(model.parameters(), 1.0)
+                optimizer.step()
 
-            # Zero-out gradients
-            optimizer.zero_grad(set_to_none=True)
+                # Zero-out gradients
+                optimizer.zero_grad(set_to_none=True)
         else:
             # BatchNorm used -- manually update stats
             for name, feature in bn_features.items():
@@ -101,7 +103,7 @@ def do_adapt(epoch, cfg, model, bn_features, data_loader, optimizer, log_dir=Non
 
             # Compute & update gradient
             if (batch_idx + 1) % cfg.ODR.IMAGES_PER_BATCH == 0:
-                clip_grad_norm_(model.parameters(), 1.0)
+                # clip_grad_norm_(model.parameters(), 1.0)
                 optimizer.step()
 
                 # Zero-out gradients

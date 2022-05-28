@@ -232,9 +232,13 @@ def do_valid(epoch, cfg, model, data_loader, camera, keypts_true_3D,
         savemat(errorfn, per_sample_metrics, appendmat=False)
         logger.info(f'Per-sample performances saved to {errorfn}')
 
-        # # Write predictions
+        # Write predictions
+        # predfn = os.path.join(log_dir, 'predictions_raw_shirt.mat')
+        # savemat(predfn, {'hmap': heatmaps, 'hmap_q': q_hmap, 'hmap_t': t_hmap, 'eff_R': R_reg, 'eff_t': t_reg}, appendmat=False)
         # predfn = os.path.join(log_dir, 'predictions_pose.mat')
-        # savemat(predfn, {'q_H': q_hmap, 't_H': t_hmap, 'R_E': R_reg, 'T_E': t_reg}, appendmat=False)
+        # savemat(predfn, {'heat_q': q_hmap, 'heat_t': t_hmap, 'effi_R': R_reg, 'effi_t': t_reg}, appendmat=False)
+        # predfn = os.path.join(log_dir, 'predictions_efficientpose.mat')
+        # savemat(predfn, {'eff_R': R_reg, 'eff_t': t_reg}, appendmat=False)
         # logger.info(f'Pose predictions saved to {predfn}')
 
     return metrics['effi_pose'].avg

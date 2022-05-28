@@ -52,7 +52,7 @@ def get_dataloader(cfg, split='train', distributed=False, load_labels=True):
 
     if split=='train':
         images_per_gpu = cfg.TRAIN.IMAGES_PER_GPU
-        shuffle = True
+        shuffle = cfg.TRAIN.SHUFFLE
         num_workers = min(cfg.TRAIN.IMAGES_PER_GPU, cfg.TRAIN.WORKERS)
     else:
         images_per_gpu = cfg.TEST.IMAGES_PER_GPU

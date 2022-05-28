@@ -133,6 +133,7 @@ dmypy.json
 /logs
 /slurm
 /matlab
+/misc
 
 # Hidden till SPEC2021 is complete
 /core/utils/models/*.mat

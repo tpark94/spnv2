@@ -2,6 +2,8 @@
 
 This repository is developed by Tae Ha "Jeff" Park at [Space Rendezvous Laboratory (SLAB)](slab.stanford.edu) of Stanford University.
 
+- [2022.05.28] Updated to include the implementations & results on SPNv2 with $\phi = 6$, GN layers.
+
 ## Introduction
 
 This is the official PyTorch implementation of [SPNv2](https://arxiv.org/abs/2203.04275).
@@ -16,17 +18,20 @@ This work presents Spacecraft Pose Network v2 (SPNv2), a Convolutional Neural Ne
 
 ### Offline Training of Full Configuration SPNv2 on SPEED+ HIL Domains and PRISMA25
 
-|       | lightbox |       |       | sunlamp |       |       | prisma25 |     |
-| :---: |  :---:   | :---: | :---: |  :---:  | :---: | :---: |  :---:  | :---: |
-| E_T [m] | E_R [deg] | E_pose | E_T [m] | E_R [deg] | E_pose | E_T [m] | E_R [deg] | E_pose |
-| 0.175 | 6.479 | 0.142 | 0.225 | 11.065 | 0.230 | 1.572 | 5.202 | 0.216 |
+|   |       | lightbox |       |       | sunlamp |       |       | prisma25 |     |
+| :--- | :---: |  :---:   | :---: | :---: |  :---:  | :---: | :---: |  :---:  | :---: |
+|   | E_T [m] | E_R [deg] | E_pose | E_T [m] | E_R [deg] | E_pose | E_T [m] | E_R [deg] | E_pose |
+| $\phi$ = 3, BN | 0.175 | 6.479 | 0.142 | 0.225 | 11.065 | 0.230 | 1.572 | 5.202 | 0.216 |
+| $\phi$ = 6, GN | 0.216 | 7.984 | 0.173 | 0.230 | 10.369 | 0.219 | 1.570 | 9.014 | 0.283 |
 
-### ODR (B = 4, N = 1024) on SPEED+ HIL Domains
 
-|       | lightbox |       |       | sunlamp |       |
-| :---: |   :---:  | :---: | :---: |  :---:  | :---: |
-| E_T [m] | E_R [deg] | E_pose | E_T [m] | E_R [deg] | E_pose |
-| 0.142 | 5.624 | 0.122 | 0.182 | 9.601 | 0.198 |
+### ODR on SPEED+ HIL Domains
+
+|   |       | lightbox |       |       | sunlamp |       |
+| :--- | :---: |   :---:  | :---: | :---: |  :---:  | :---: |
+|   | E_T [m] | E_R [deg] | E_pose | E_T [m] | E_R [deg] | E_pose |
+| $\phi$ = 3, BN (B = 4, N = 1024) | 0.142 | 5.624 | 0.122 | 0.182 | 9.601 | 0.198 |
+| $\phi$ = 6, GN (N = 4096) | 0.150 | 5.577 | 0.122 | 0.161 | 9.788 | 0.197 |
 
 ## Installation
 

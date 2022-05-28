@@ -1,0 +1,83 @@
+ROOT: '/media/shared/Jeff/SLAB/spnv2'
+OUTPUT_DIR: 'outputs'
+LOG_DIR:    'logs'
+# SEED: 2021 # Random seed
+AUTO_RESUME: True
+CUDA: True
+FP16: False # No AMP during TTT
+VERBOSE: True
+EXP_NAME: 'odr/B4_N1024'
+CUDNN:
+  BENCHMARK: True
+  DETERMINISTIC: False
+  ENABLED: True
+DATASET:
+  ROOT: '/home/jeffpark/SLAB/Dataset'
+  DATANAME: 'speedplus'
+  CAMERA: 'camera.json'
+  KEYPOINTS: 'models/tangoPoints.mat' # w.r.t. DATASET.ROOT
+  CADMODEL:  'models/tango.ply'       # w.r.t. DATASET.ROOT
+  IMAGE_SIZE: [1920, 1200]
+  INPUT_SIZE: [768, 512]
+  OUTPUT_SIZE: [4, 8, 16, 32, 64, 128] # Division factor from INPUT_SIZE (P2 ~ P7)
+  MAX_NUM_OBJECTS: 1 # One satellite per image
+  NUM_KEYPOINTS:  11 # Tango model keypoints
+  NUM_ANCHORS:     9 # Anchors for bbox detection etc.
+  SIGMA: 2 # for 'heatmap' head
+AUGMENT:
+  P: 0.0
+  APPLY_TEXTURE_RANDOMIZATION: False
+  RANDOM_TEXTURE:
+    ALPHA: 0.5 # Degree of randomization
+    PROB:  0.0 # Prob. of performing texture rand.
+  ADJUST_BRIGHTNESS_CONTRAST: True
+  APPLY_BLUR: True
+  APPLY_SOLAR_FLARE: True
+  APPLY_RANDOM_ERASE: True
+  APPLY_NOISE: True
+ODR:
+  MIN_ENTROPY: True
+  NUM_TRAIN_SAMPLES: 1024
+  IMAGES_PER_BATCH: 4
+TRAIN:
+  TRAIN_CSV: 'lightbox/labels/lightbox.csv'
+  VAL_CSV  : 'lightbox/labels/lightbox.csv'
+  BEGIN_EPOCH: 0
+  END_EPOCH: 1
+  VALID_FREQ: -1
+  VALID_FRACTION: 1   # (0, 1]
+  IMAGES_PER_GPU: 1
+  OPTIMIZER: AdamW
+  LR: 1.0e-4
+  SCHEDULER: 'step'
+  LR_FACTOR: 0.1
+  LR_STEP: [15, 18]
+  GAMMA1: 0.9
+  GAMMA2: 0.999
+  WD: 0.0
+  WORKERS: 4
+TEST:
+  TEST_CSV: 'lightbox/labels/lightbox.csv'
+  IMAGES_PER_GPU: 1
+  HEAD: ['heatmap', 'efficientpose']
+  BBOX_THRESHOLD:    0.0
+  HEATMAP_THRESHOLD: 0.5
+  SPEED_THRESHOLD_Q: 0.169 # [deg]
+  SPEED_THRESHOLD_T: 2.173e-3 # [m/m]
+MODEL:
+  BACKBONE:
+    NAME: 'efficientdet_d3'
+  HEAD:
+    NAMES: ['heatmap', 'efficientpose', 'segmentation']
+    LOSS_HEADS: []
+    LOSS_FACTORS: []
+    LOSS_NUMS: [0] # For reporting only
+    EFFICIENTPOSE_LOSS_FACTOR: [1.0, 1.0, 1.0] # [cls, bbox, pose]
+    POSE_REGRESSION_LOSS: 'speed' # SPEED or transformation loss
+    ANCHOR_SCALE: '[2 ** 0, 2 ** (1.0 / 3.0), 2 ** (2.0 / 3.0)]'
+    ANCHOR_RATIO: [[1.0, 1.0], [1.4, 0.7], [0.7, 1.4]]
+  EFFICIENTDET_PHI: 3
+  USE_GROUPNORM_BACKBONE: False
+  USE_GROUPNORM_HEADS: True
+  GROUPNORM_SIZE: 16
+  FIND_UNUSED_PARAM: False

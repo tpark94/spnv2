@@ -83,7 +83,7 @@ def main_worker(output_dir, log_dir):
     write_model_info(model, log_dir)
 
     # disable entire model grads
-    model.train()
+    model.eval()
     model.requires_grad_(False)
 
     # -------------------------------------------------------------

@@ -73,6 +73,9 @@ def main():
         domain, split = args.jsonfile.split('/')
     elif cfg.DATASET.DATANAME == 'prisma25':
         domain, split = '', args.jsonfile
+    elif 'shirt' in cfg.DATASET.DATANAME:
+        traj, domain, split = args.jsonfile.split('/')
+        domain = traj + '/' + domain
     else:
         raise NotImplementedError('Only accepting speedplus and prisma25')
     outdir = os.path.join(datadir, domain, 'labels')
