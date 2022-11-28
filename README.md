@@ -49,7 +49,7 @@ pip3 install -r requirements.txt
 
 4. Download [SPEED+](https://purl.stanford.edu/wv398fc4383) at `$DATASET.ROOT`.
 
-5. (Optional) Download pre-trained models from [here](https://office365stanford-my.sharepoint.com/:f:/g/personal/tpark94_stanford_edu/EleRJUfWcTdComwfLwrrGTIBfj1xNahq06_NiNDDKUDFJg?e=s0qDch). Specify the model's path at `${TEST.MODEL_FILE}`.
+5. (Optional) Download pre-trained models from [here](https://office365stanford-my.sharepoint.com/:f:/g/personal/tpark94_stanford_edu/EleRJUfWcTdComwfLwrrGTIBFtH_MItMgc9Cp_wgKOa7oA?e=Va6cqv). Specify the model's path at `${TEST.MODEL_FILE}`.
 
 ## Currently Unavailable Items
 
