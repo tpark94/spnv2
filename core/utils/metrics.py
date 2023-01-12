@@ -105,14 +105,17 @@ def speed_score(t_pr, ori_pr, t_gt, ori_gt, representation='quaternion',
 
     t_gt = np.reshape(t_gt, (3,))
     speed_t = err_t / np.sqrt(np.sum(np.square(t_gt)))
-    speed_r = np.deg2rad(err_q)
+    speed_q = np.deg2rad(err_q)
 
     # Check if within threshold
-    if applyThreshold and err_q < theta_q and speed_t < theta_t:
-        speed = 0.0
-    else:
-        speed = speed_t + speed_r
+    if applyThreshold and err_q < theta_q:
+        speed_q = 0.0
 
-    return speed
+    if applyThreshold and speed_t < theta_t:
+        speed_t = 0.0
+
+    speed = speed_t + speed_q
+
+    return speed_t, speed_q, speed
 
 

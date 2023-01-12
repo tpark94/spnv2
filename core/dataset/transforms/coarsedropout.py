@@ -91,7 +91,7 @@ class CoarseDropout(A.DualTransform):
     def get_params_dependent_on_targets(self, params):
         img  = params["image"]
         height, width = img.shape[:2]
-        bbox = params["bboxes"][0] # Single object [xmin, ymin, xmax, ymax] (pix)
+        bbox = params["bboxes"][0] # Single object [xmin, ymin, xmax, ymax] (normalized)
 
         xmin = int(width * bbox[0])
         ymin = int(height * bbox[1])

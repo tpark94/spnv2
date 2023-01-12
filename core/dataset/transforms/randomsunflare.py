@@ -86,7 +86,7 @@ class RandomSunFlare(A.DualTransform):
 
     def get_params_dependent_on_targets(self, params):
         img = params["image"]
-        bbox = params["bboxes"][0] # Single object [xmin, ymin, xmax, ymax] (pix)
+        bbox = params["bboxes"][0] # Single object [xmin, ymin, xmax, ymax] (normalized)
         height, width = img.shape[:2]
 
         # Flare angle

@@ -3,6 +3,7 @@
 This repository is developed by Tae Ha "Jeff" Park at [Space Rendezvous Laboratory (SLAB)](slab.stanford.edu) of Stanford University.
 
 - [2022.05.28] Updated to include the implementations & results on SPNv2 with $\phi = 6$, GN layers.
+- [2023.01.12] The lightbox and sunlamp domain test labels are now available through [Stanford Digital Repository](https://purl.stanford.edu/wv398fc4383)! The metrics for HIL domains are also slightly modified to be in agreement with our [new paper](https://www.sciencedirect.com/science/article/pii/S0094576523000048) summarizing the competition.
 
 ## Introduction
 
@@ -49,17 +50,16 @@ pip3 install -r requirements.txt
 
 4. Download [SPEED+](https://purl.stanford.edu/wv398fc4383) at `$DATASET.ROOT`.
 
-5. (Optional) Download pre-trained models from [here](https://office365stanford-my.sharepoint.com/:f:/g/personal/tpark94_stanford_edu/EleRJUfWcTdComwfLwrrGTIBfj1xNahq06_NiNDDKUDFJg?e=s0qDch). Specify the model's path at `${TEST.MODEL_FILE}`.
+5. (Optional) Download pre-trained models from [here](https://office365stanford-my.sharepoint.com/:f:/g/personal/tpark94_stanford_edu/EleRJUfWcTdComwfLwrrGTIBFtH_MItMgc9Cp_wgKOa7oA). Specify the model's path at `${TEST.MODEL_FILE}`.
 
-## Currently Unavailable Items
+## Unavailable Items
 
-The following items are currently unavailable:
+The following items are unavailable:
 
 - `.mat` file containing Tango keypoints
 - binary masks
-- `lightbox` and `sunlamp` labels
 
-For now, in order to prepare `.csv` files for the labels, you must recover 11 keypoints of Tango following the procedure described in this [paper](https://arxiv.org/abs/1909.00392) or any method of your choice. Save them as a 3 x 11 array in meters under the variable named `tango3Dpoints` as a `.mat` file. Specify its path w.r.t. `$DATASET.ROOT` at `$DATASET.KEYPOINTS`.
+In order to prepare `.csv` files for the labels, you must recover 11 keypoints of Tango following the procedure described in this [paper](https://arxiv.org/abs/1909.00392) or any method of your choice. Save them as a 3 x 11 array in meters under the variable named `tango3Dpoints` as a `.mat` file. Specify its path w.r.t. `$DATASET.ROOT` at `$DATASET.KEYPOINTS`.
 
 ## Pre-processing
 
@@ -68,11 +68,11 @@ To pre-process the training labels for the `synthetic` domain, run
 python3 tools/preprocess.py --jsonfile synthetic/train.json --cfg experiments/offline_train_full_config.yaml
 ```
 
-In addition to the `.csv` files under `labels`, it will save the resized images to `images_768x512_RGB`, for example. Currently, only `synthetic/train.json` and `synthetic/validation.json` are supported for processing. Include `--no_masks` to ignore masks and use keypoints to construct bounding boxes instead. Run the above with `--no_labels` to prepare list of `lightbox` and `sunlamp` images without labels.
+In addition to the `.csv` files under `labels`, it will save the resized images to `images_768x512_RGB`, for example. Include `--no_masks` to ignore masks and use keypoints to construct bounding boxes instead. Run the above with `--no_labels` to prepare list of images without labels.
 
 ### Style Augmentation
 
-The images can be stylized using the code from this [repository](https://github.com/philipjackson/style-augmentation). We will release the style-augmented images of SPEED+ in the future as well.
+The images can be stylized using the code from this [repository](https://github.com/philipjackson/style-augmentation).
 
 ## Training & Testing
 

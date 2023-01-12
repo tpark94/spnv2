@@ -39,11 +39,13 @@ def do_valid(epoch, cfg, model, data_loader, camera, keypts_true_3D,
 
     metric_names = []
     if 'heatmap' in cfg.TEST.HEAD:
-        metric_names += ['heat_eR', 'heat_eT', 'heat_pose']
+        metric_names += ['heat_eR', 'heat_eT', 'heat_eR_HIL', 'heat_eT_norm_HIL', 'heat_pose']
     if 'efficientpose' in cfg.TEST.HEAD:
-        metric_names += ['effi_iou', 'effi_eR', 'effi_eT', 'effi_pose']
+        metric_names += ['effi_iou', 'effi_eR', 'effi_eT', 'effi_eR_HIL', 'effi_eT_norm_HIL', 'effi_pose']
     if 'segmentation' in cfg.TEST.HEAD:
         metric_names += ['segm_iou']
+
+    metric_names += ['final_pose']
 
     metrics = {}
     per_sample_metrics = {}
@@ -68,7 +70,7 @@ def do_valid(epoch, cfg, model, data_loader, camera, keypts_true_3D,
     progress = ProgressMeter(
         num_batches,
         batch_time,
-        [v for k, v in metrics.items() if 'effi' in k],
+        [v for k, v in metrics.items() if k in ['heat_eR', 'effi_eT', 'final_pose']],
         prefix="Testing {:03d} ".format(epoch+1))
 
     # switch to eval mode
@@ -116,7 +118,7 @@ def do_valid(epoch, cfg, model, data_loader, camera, keypts_true_3D,
 
                     err_q = error_orientation(q_pr, q_gt, 'quaternion') # [deg]
                     err_t = error_translation(t_pr, t_gt)
-                    speed = speed_score(t_pr, q_pr, t_gt, q_gt,
+                    speed_t, speed_q, speed = speed_score(t_pr, q_pr, t_gt, q_gt,
                         representation='quaternion',
                         applyThreshold=domain in ['lightbox', 'sunlamp'],
                         theta_q=cfg.TEST.SPEED_THRESHOLD_Q,
@@ -128,7 +130,7 @@ def do_valid(epoch, cfg, model, data_loader, camera, keypts_true_3D,
                     t_hmap.append(t_pr)
 
                     # Metrics
-                    result = {'_eR': err_q, '_eT': err_t, '_pose': speed}
+                    result = {'_eR': err_q, '_eT': err_t, '_eR_HIL': speed_q, '_eT_norm_HIL': speed_t, '_pose': speed}
 
                 elif name == 'segmentation':
                     mask_pr = outputs[i].sigmoid().cpu().numpy()
@@ -156,7 +158,7 @@ def do_valid(epoch, cfg, model, data_loader, camera, keypts_true_3D,
                     # Pose metric(s)
                     err_q = error_orientation(R_pr, R_gt, 'rotationmatrix') # [deg]
                     err_t = error_translation(t_pr, t_gt)
-                    speed = speed_score(t_pr, R_pr, t_gt, R_gt,
+                    speed_t, speed_q, speed = speed_score(t_pr, R_pr, t_gt, R_gt,
                         representation='rotationmatrix',
                         applyThreshold=domain in ['lightbox', 'sunlamp'],
                         theta_q=cfg.TEST.SPEED_THRESHOLD_Q,
@@ -167,12 +169,16 @@ def do_valid(epoch, cfg, model, data_loader, camera, keypts_true_3D,
                     t_reg.append(t_pr)
 
                     # Metrics
-                    result = {'_iou': iou, '_eR': err_q, '_eT': err_t, '_pose': speed}
+                    result = {'_iou': iou, '_eR': err_q, '_eT': err_t, '_eR_HIL': speed_q, '_eT_norm_HIL': speed_t, '_pose': speed}
 
                 # Update metrics of this head
                 for m, v in result.items():
                     metrics[name[:4]+m].update(v, 1)
                     per_sample_metrics[name[:4]+m].append(v)
+
+            # Final pose score
+            final_pose = per_sample_metrics['heat_eR_HIL'][-1] + per_sample_metrics['effi_eT_norm_HIL'][-1]
+            metrics['final_pose'].update(final_pose, 1)
 
         # Elapsed time
         batch_time.update((time.time() - start)*1000)
@@ -216,6 +222,10 @@ def do_valid(epoch, cfg, model, data_loader, camera, keypts_true_3D,
                 if n[:4] in name:
                     results_mat[n] = m.avg
 
+        # Final pose
+        results_str += ['Final Pose: {:.5f}\n'.format(metrics['final_pose'].avg)]
+        results_mat['final_pose'] = metrics['final_pose'].avg
+
         # Write average performances
         resultfn = os.path.join(log_dir, 'mean_performance.txt')
         with open(resultfn, 'w') as f:
@@ -235,11 +245,13 @@ def do_valid(epoch, cfg, model, data_loader, camera, keypts_true_3D,
         # Write predictions
         # predfn = os.path.join(log_dir, 'predictions_raw_shirt.mat')
         # savemat(predfn, {'hmap': heatmaps, 'hmap_q': q_hmap, 'hmap_t': t_hmap, 'eff_R': R_reg, 'eff_t': t_reg}, appendmat=False)
+
         # predfn = os.path.join(log_dir, 'predictions_pose.mat')
         # savemat(predfn, {'heat_q': q_hmap, 'heat_t': t_hmap, 'effi_R': R_reg, 'effi_t': t_reg}, appendmat=False)
-        # predfn = os.path.join(log_dir, 'predictions_efficientpose.mat')
-        # savemat(predfn, {'eff_R': R_reg, 'eff_t': t_reg}, appendmat=False)
-        # logger.info(f'Pose predictions saved to {predfn}')
+
+        predfn = os.path.join(log_dir, 'predictions_efficientpose.mat')
+        savemat(predfn, {'eff_R': R_reg, 'eff_t': t_reg}, appendmat=False)
+        logger.info(f'Pose predictions saved to {predfn}')
 
     return metrics['effi_pose'].avg
 

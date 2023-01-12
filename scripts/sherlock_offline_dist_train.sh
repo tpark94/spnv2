@@ -38,9 +38,9 @@ OUTPUT=$SCRATCH/spnv2/outputs
 CFG=$ROOT/experiments/offline_train_full_config_phi3_BN.yaml
 # CFG=$ROOT/experiments/offline_train_full_config_phi6_GN.yaml
 
-python3 tools/train.py --cfg $CFG \
-    DIST.MULTIPROCESSING_DISTRIBUTED True \
-    LOG_DIR $LOG OUTPUT_DIR $OUTPUT ROOT $ROOT DATASET.ROOT $DROOT VERBOSE False
+# python3 tools/train.py --cfg $CFG \
+#     DIST.MULTIPROCESSING_DISTRIBUTED True \
+#     LOG_DIR $LOG OUTPUT_DIR $OUTPUT ROOT $ROOT DATASET.ROOT $DROOT VERBOSE False
 
 python3 tools/test.py --cfg $CFG \
     TEST.TEST_CSV lightbox/labels/lightbox.csv \

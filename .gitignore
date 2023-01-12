@@ -134,6 +134,7 @@ dmypy.json
 /slurm
 /matlab
 /misc
+*/ablation
 
 # Hidden till SPEC2021 is complete
 /core/utils/models/*.mat

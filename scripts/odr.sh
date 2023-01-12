@@ -15,7 +15,7 @@ for DOMAIN in lightbox sunlamp; do
     CSV=$DOMAIN/labels/$DOMAIN.csv
 
     NUM_SAMPLES=4096
-    BATCH_SIZE=4
+    BATCH_SIZE=1
 
     python3 tools/odr.py --cfg $EXP VERBOSE True \
         MODEL.PRETRAIN_FILE $PRETRAIN \

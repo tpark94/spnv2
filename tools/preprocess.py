@@ -69,7 +69,7 @@ def main():
     keypts3d = load_tango_3d_keypoints(cfg.DATASET.KEYPOINTS) # (11, 3) [m]
 
     # Where to save CSV?
-    if cfg.DATASET.DATANAME == 'speedplus':
+    if 'speedplus' in cfg.DATASET.DATANAME:
         domain, split = args.jsonfile.split('/')
     elif cfg.DATASET.DATANAME == 'prisma25':
         domain, split = '', args.jsonfile
@@ -103,12 +103,14 @@ def main():
         # ---------- Read image & resize & save
         filename = labels[idx]['filename']
         image    = cv2.imread(os.path.join(datadir, domain, 'images', filename), cv2.IMREAD_COLOR)
+        image    = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        # image    = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
         image    = cv2.resize(image, cfg.DATASET.INPUT_SIZE)
         cv2.imwrite(os.path.join(imagedir, filename), image)
 
         # ---------- Read mask & resize & save
         if args.load_masks:
-            mask = cv2.imread(os.path.join(datadir, domain, 'masks', filename), cv2.IMREAD_GRAYSCALE)
+            mask = cv2.imread(os.path.join(datadir, domain, 'masks', filename.replace('jpg', 'png')), cv2.IMREAD_GRAYSCALE)
             mask = cv2.resize(mask, [int(s / cfg.DATASET.OUTPUT_SIZE[0]) for s in cfg.DATASET.INPUT_SIZE])
             cv2.imwrite(os.path.join(maskdir, filename), mask)
 
