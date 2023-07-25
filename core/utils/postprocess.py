@@ -28,6 +28,9 @@ def solve_pose_from_heatmaps(heatmaps, image_size, threshold, camera, keypts_tru
     # Take max
     maxVal, maxInd = heatmaps.view(nK, -1).max(-1)
 
+    # Flag to reject measurements
+    reject = False
+
     # Apply heatmaps until we have enough keypoints detected
     visibleIdx = []
     while len(visibleIdx) < 5 and threshold >= 0:
@@ -35,8 +38,8 @@ def solve_pose_from_heatmaps(heatmaps, image_size, threshold, camera, keypts_tru
         threshold -= 0.1
 
     if len(visibleIdx) < 5:
-        logger.info('Detected sample with less than 5 keypoints detected')
-        return None, np.array([1,0,0,0]), np.array([0,0,5])
+        reject = True
+        return None, None, None, reject
     else:
         # Extract keypoint locations in [pix]
         keypts = torch.zeros(nK, 2)
@@ -51,10 +54,22 @@ def solve_pose_from_heatmaps(heatmaps, image_size, threshold, camera, keypts_tru
         q, t = pnp(keypts_true_3D[visibleIdx], keypts[visibleIdx].numpy(),
                         camera['cameraMatrix'], camera['distCoeffs'])
 
-        # Correction based on known SPEED+ pose distribution
-        t = np.clip(t, 0, 10)
+        #! Added on 2023/07/02
+        # Correction based on camera physics
+        z_max = 50 # [m]
 
-        return keypts, q, t
+        if t[2] < 0 or t[2] > z_max:
+            # --- 1. Check z limit
+            reject = True
+        else:
+            # --- 2. Check xy limits based on estimated z distance
+            x_max = t[2] * np.tan(camera["horizontalFOV"]/2)
+            y_max = x_max / camera["Nu"] * camera["Nv"]
+
+            if t[0] < -x_max or t[0] > x_max or t[1] < -y_max or t[1] > y_max:
+                reject = True
+
+        return keypts, q, t, reject
 
 # -----------------------------------------------------------------------
 # Bounding box post-processing

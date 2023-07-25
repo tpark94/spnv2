@@ -221,6 +221,9 @@ def load_camera_intrinsics(camera_json):
         k: np.array(v, dtype=np.float32) for k, v in cam.items()
     }
 
+    # Compute horizontal FOV
+    cam["horizontalFOV"] = 2 * np.arctan2(0.5 * cam["ppx"] * cam["Nu"], cam["fx"])
+
     return cam
 
 # -----------------------------------------------------------------------
