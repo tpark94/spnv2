@@ -4,7 +4,7 @@ This repository is developed by Tae Ha "Jeff" Park at [Space Rendezvous Laborato
 
 - [2022.05.28] Updated to include the implementations & results on SPNv2 with $\phi = 6$, GN layers.
 - [2023.01.12] The lightbox and sunlamp domain test labels are now available through [Stanford Digital Repository](https://purl.stanford.edu/wv398fc4383)! The metrics for HIL domains are also slightly modified to be in agreement with our [new paper](https://www.sciencedirect.com/science/article/pii/S0094576523000048) summarizing the competition.
-- [2023.07.02] There was a bug computing the translation vector from heatmaps. This bug does not affect the final results since we use translation vectors from the EfficientPose (i.e. regression) head. The bug is fixed (see the [log](docs/BUGFIX_20230702.md)), and the journal article in press will be updated soon.
+- [2023.07.25] There was a bug computing the translation vector from heatmaps. This bug does not affect the final results since we use translation vectors from the EfficientPose (i.e. regression) head. The bug is fixed (see the [log](/docs/BUGFIX_20230725.md)), and the journal article in press will be updated soon.
 
 ## Introduction
 
