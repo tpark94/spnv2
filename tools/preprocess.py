@@ -110,9 +110,9 @@ def main():
 
         # ---------- Read mask & resize & save
         if args.load_masks:
-            mask = cv2.imread(os.path.join(datadir, domain, 'masks', filename.replace('jpg', 'png')), cv2.IMREAD_GRAYSCALE)
-            mask = cv2.resize(mask, [int(s / cfg.DATASET.OUTPUT_SIZE[0]) for s in cfg.DATASET.INPUT_SIZE])
-            cv2.imwrite(os.path.join(maskdir, filename), mask)
+            mask     = cv2.imread(os.path.join(datadir, domain, 'masks', filename), cv2.IMREAD_GRAYSCALE)
+            mask_out = cv2.resize(mask, [int(s / cfg.DATASET.OUTPUT_SIZE[0]) for s in cfg.DATASET.INPUT_SIZE])
+            cv2.imwrite(os.path.join(maskdir, filename), mask_out)
 
         # ---------- Read labels
         if args.load_labels:

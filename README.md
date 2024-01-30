@@ -6,6 +6,7 @@ This repository is developed by Tae Ha "Jeff" Park at [Space Rendezvous Laborato
 - [2023.01.12] The lightbox and sunlamp domain test labels are now available through [Stanford Digital Repository](https://purl.stanford.edu/wv398fc4383)! The metrics for HIL domains are also slightly modified to be in agreement with our [new paper](https://www.sciencedirect.com/science/article/pii/S0094576523000048) summarizing the competition.
 - [2023.07.25] There was a bug computing the translation vector from heatmaps. This bug does not affect the final results since we use translation vectors from the EfficientPose (i.e. regression) head. The bug is fixed (see the [log](/docs/BUGFIX_20230725.md)), and the journal article in press will be updated soon.
 - [2023.11.03] We are sharing the `tangoPoints.mat` file under `core/utils/models`.
+- [2024.01.30] The binary masks are now available at this [link](https://office365stanford-my.sharepoint.com/:u:/g/personal/tpark94_stanford_edu/EbW9PGh8pIxGmNsXN0aTCvgB-EQ9dvsvrcDyThtZGGCLRw).
 
 ## Introduction
 
@@ -50,18 +51,10 @@ The code is developed and tested with python 3.7 and PyTorch 1.10 on Ubuntu 20.0
 pip3 install -r requirements.txt
 ```
 
-4. Download [SPEED+](https://purl.stanford.edu/wv398fc4383) at `$DATASET.ROOT`.
+4. Download [SPEED+](https://purl.stanford.edu/wv398fc4383) at `$DATASET.ROOT`. The binary masks are available here [link](https://office365stanford-my.sharepoint.com/:u:/g/personal/tpark94_stanford_edu/EbW9PGh8pIxGmNsXN0aTCvgB-EQ9dvsvrcDyThtZGGCLRw). Copy the `masks` folders under appropriate image domains.
 
 5. (Optional) Download pre-trained models from [here](https://office365stanford-my.sharepoint.com/:f:/g/personal/tpark94_stanford_edu/EleRJUfWcTdComwfLwrrGTIBFtH_MItMgc9Cp_wgKOa7oA). Specify the model's path at `${TEST.MODEL_FILE}`.
 
-## Unavailable Items
-
-The following items are unavailable:
-
-- `.mat` file containing Tango keypoints
-- binary masks
-
-In order to prepare `.csv` files for the labels, you must recover 11 keypoints of Tango following the procedure described in this [paper](https://arxiv.org/abs/1909.00392) or any method of your choice. Save them as a 3 x 11 array in meters under the variable named `tango3Dpoints` as a `.mat` file. Specify its path w.r.t. `$DATASET.ROOT` at `$DATASET.KEYPOINTS`.
 
 ## Pre-processing
 
